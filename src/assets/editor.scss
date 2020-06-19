@@ -1,0 +1,12 @@
+.my-editor {
+  .vditor-toolbar__item {
+    .vditor-tooltipped {
+      width: 35px;
+      &[data-type="upload"] svg {
+        width: 18px;
+        height: 18px;
+        margin-top: -1px;
+      }
+    }
+  }
+}
