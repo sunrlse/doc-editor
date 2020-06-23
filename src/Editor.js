@@ -1,5 +1,6 @@
 import React from 'react'
 import Vditor from 'vditor'
+import axios from 'axios'
 import 'vditor/src/assets/scss/index.scss'
 import './assets/editor.scss';
 import './assets/obdoc.scss'
@@ -27,8 +28,11 @@ const editorStyle = {
 class Editor extends React.Component {
   constructor (props) {
     super(props)
+    let content = '# something new↵↵## seceond ang↵↵### let it work!↵↵| good | price | count |↵| :- | :-: | -: |↵| t-shirt | 123 | 21 |↵| paint | 999 | 3 |↵↵#### 四级标题↵↵##### **五级标题**↵↵###### 六级标题↵↵no matter how ,no matter what, no matter where, they are↵'
+    content = content.replace(/↵/g, '\n')
     this.state = {
-      content: '# 一级标题\n\n## 二级标题\n\n### 三级标题\n\n| col11111 | col2 | col222223 |\n| :- | :-: | -: |\n| 1 | d | a |\n| 1 | x | a |\n#### 四级标题\n\n##### **五级标题**\n\n![Lark20200512154957.png](http://localhost:8087/image/Lark20200512154957.png)\n\n###### 六级标题\n'
+      // content: '# 一级标题\n\n## 二级标题\n\n### 三级标题\n\n| col11111 | col2 | col222223 |\n| :- | :-: | -: |\n| 1 | d | a |\n| 1 | x | a |\n#### 四级标题\n\n##### **五级标题**\n\n![Lark20200512154957.png](http://localhost:8087/image/Lark20200512154957.png)\n\n###### 六级标题\n'
+      content
     }
   }
 
@@ -103,9 +107,44 @@ class Editor extends React.Component {
     this.vditor = new Vditor('editor', config)
   }
 
-  save () {
+  create () {
     let md = this.vditor.getValue();
-    console.log(md)
+    let params = {
+      content: md
+    }
+    axios.post('http://localhost:3006/api/md', params)
+      .then(res => {
+        console.log(res)
+      })
+      .catch(err => {
+        console.log('catch ', err)
+      })
+  }
+  update () {
+    let md = this.vditor.getValue();
+    let params = {
+      aid: 'hihi',
+      content: md
+    }
+    axios.post('http://localhost:3006/api/md/update', params)
+      .then(res => {
+        console.log(res)
+      })
+      .catch(err => {
+        console.log('catch ', err)
+      })
+  }
+  delete () {
+    let params = {
+      aid: 'hihi'
+    }
+    axios.post('http://localhost:3006/api/md/del', params)
+      .then(res => {
+        console.log(res)
+      })
+      .catch(err => {
+        console.log('catch ', err)
+      })
   }
 
   
@@ -115,7 +154,9 @@ class Editor extends React.Component {
         <header style={headerStyle}></header>
         <section style={sectionStyle}>
           <aside style={asideStyle}>
-            <button onClick={this.save.bind(this)}>保存</button>
+            <button onClick={this.create.bind(this)}>创建</button>
+            <button onClick={this.update.bind(this)}>更新</button>
+            <button onClick={this.delete.bind(this)}>删除</button>
           </aside>
           <div id="editor" className="my-editor" style={editorStyle}></div>
         </section>
